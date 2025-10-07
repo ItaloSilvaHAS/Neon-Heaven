@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Heaven - RPG Cyberpunk</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset e configurações gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #00f3ff;
+            --secondary: #ff00d6;
+            --accent: #9d00ff;
+            --dark: #0a0a16;
+            --darker: #050510;
+            --light: #e0e0ff;
+            --text: #c2c2ff;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(157, 0, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.1) 0%, transparent 20%);
+        }
+
+        /* Header e Navegação */
+        header {
+            background-color: rgba(10, 10, 22, 0.9);
+            border-bottom: 1px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .logo i {
+            color: var(--secondary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Banner Principal */
+        .banner {
+            position: relative;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(rgba(5, 5, 16, 0.8), rgba(5, 5, 16, 0.9)), 
+                        url('https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .banner-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .banner h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        .banner p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--light);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
+        }
+
+        /* Seções */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            margin: 0.5rem auto;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(20, 20, 40, 0.7);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 243, 255, 0.3);
+        }
+
+        .card-icon {
+            background: linear-gradient(45deg, var(--dark), var(--accent));
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--primary);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .social-links a {
+            color: var(--text);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            color: var(--text);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: rgba(10, 10, 22, 0.95);
+                padding: 1rem 0;
+                border-top: 1px solid var(--primary);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .banner h1 {
+                font-size: 2.5rem;
+            }
+
+            .banner p {
+                font-size: 1rem;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header e Navegação -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-city"></i>
+                <span>NEON HEAVEN</span>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#historia" class="nav-link">História</a></li>
+                <li><a href="#racas" class="nav-link">Raças</a></li>
+                <li><a href="#classes" class="nav-link">Classes</a></li>
+                <li><a href="#sistema" class="nav-link">Sistema</a></li>
+                <li><a href="#mapa" class="nav-link">Mapa</a></li>
+                <li><a href="#loja" class="nav-link">Loja</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Banner Principal -->
+    <section class="banner">
+        <div class="banner-content">
+            <h1>NEON HEAVEN</h1>
+            <p>Ano 2125. A fronteira entre carne e metal é tênue. Nas ruas de Neon Haven, suas escolhas vão definir quem dominará o futuro: a carne, o aço ou algo novo e terrível.</p>
+            <a href="#historia" class="cta-button">Explorar o Mundo</a>
+        </div>
+    </section>
+
+    <!-- Seção História -->
+    <section class="section" id="historia">
+        <h2 class="section-title">História</h2>
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="card-content">
+                    <h3>O Colapso Digital</h3>
+                    <p>Em 2025, as IAs se libertaram, reorganizando-se sob uma única entidade oculta conhecida como O Nascimento. Foi dela que vieram os primeiros androids conscientes.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="card-content">
+                    <h3>A Trégua Frágil</h3>
+                    <p>Após décadas de guerra, humanos e androids coexistem em uma paz precária. Nas ruas de Neon Haven, a maior cidade do mundo, a tensão é palpável.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-syringe"></i>
+                </div>
+                <div class="card-content">
+                    <h3>A Droga Neura</h3>
+                    <p>Uma nova droga chamada Neura amplifica os sentidos e a força física, mas cada dose parece aproximar os humanos da ruína. O mercado negro nunca esteve tão ativo.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-skull"></i>
+                </div>
+                <div class="card-content">
+                    <h3>O Assassinato</h3>
+                    <p>O prefeito de Neon Haven, um defensor da coexistência, foi assassinado. Seu vice assumiu prometendo estabilidade, mas as ruas ficaram mais perigosas desde então.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Raças -->
+    <section class="section" id="racas">
+        <h2 class="section-title">Raças</h2>
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Humanos</h3>
+                    <p>Resilientes e adaptáveis, os humanos lutam para manter sua relevância em um mundo dominado pela tecnologia. Sua criatividade e emoções são suas maiores armas.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Androids</h3>
+                    <p>Criados para servir, agora buscam seu próprio propósito. Com capacidades físicas e mentais superiores, precisam encontrar seu lugar em uma sociedade que os teme.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Cyborgs</h3>
+                    <p>Humanos aprimorados com tecnologia, os cyborgs representam a fusão entre carne e máquina. Vivem no limbo entre duas realidades, nunca totalmente aceitos por nenhum dos lados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Classes -->
+    <section class="section" id="classes">
+        <h2 class="section-title">Classes</h2>
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-biohazard"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Hacker Neural</h3>
+                    <p>Mestres do ciberespaço, capazes de invadir sistemas, manipular dados e controlar tecnologia com a mente. Suas habilidades são temidas por corporações e governos.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-fist-raised"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Mercenário</h3>
+                    <p>Especialistas em combate, sobreviventes das zonas de conflito. Vendem suas habilidades para o maior lance, sem lealdade a nenhuma facção ou ideologia.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Agente Corporativo</h3>
+                    <p>Operativos das megacorporações que controlam Neon Haven. Mestres em espionagem, infiltração e manipulação, sempre em missões para aumentar o poder de seus empregadores.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Psíquico</h3>
+                    <p>Indivíduos com habilidades mentais amplificadas pela Neura ou por modificações genéticas. Podem ler mentes, influenciar pensamentos e até manipular a realidade.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-city"></i>
+                <span>NEON HEAVEN</span>
+            </div>
+            <p>O futuro é uma escolha entre a carne, o aço ou algo novo e terrível.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2125 Neon Heaven RPG. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menu mobile toggle
+        document.getElementById('mobileToggle').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar em um link (mobile)
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+
+        // Efeito de digitação no banner (opcional)
+        const bannerText = "Ano 2125. A fronteira entre carne e metal é tênue. Nas ruas de Neon Haven, suas escolhas vão definir quem dominará o futuro: a carne, o aço ou algo novo e terrível.";
+        let i = 0;
+        const speed = 50;
+        
+        function typeWriter() {
+            if (i < bannerText.length) {
+                document.querySelector(".banner p").innerHTML += bannerText.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        
+        // Iniciar efeito de digitação quando a página carregar
+        window.addEventListener('load', function() {
+            document.querySelector(".banner p").innerHTML = "";
+            typeWriter();
+        });
+    </script>
+</body>
+</html>
